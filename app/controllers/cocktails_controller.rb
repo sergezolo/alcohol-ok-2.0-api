@@ -3,25 +3,25 @@ class CocktailsController < ApplicationController
 
     def index
         cocktails = Cocktail.all
-        render json: CocktailSerializer.new(cocktails).to_serialized_json
+        render json: CocktailSerializer.new(cocktails)
     end
 
     def create
         cocktail = Cocktail.new(cocktail_params)
         if cocktail.save
-            render json: CocktailSerializer.new(cocktail).to_serialized_json, status: :created
+            render json: CocktailSerializer.new(cocktail), status: :created, location: cocktail
         else
-            render json: {error: cocktail.errors.full_messages}, status: :not_acceptable
+            render json: {error: cocktail.errors.full_messages}
         end
     end
 
     def show
-        render json: CocktailSerializer.new(@cocktail).to_serialized_json
+        render json: CocktailSerializer.new(@cocktail)
     end
 
     def update
         if @cocktail.update(cocktail_params)
-            render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :updated 
+            render json: CocktailSerializer.new(@cocktail)
         else
             render json: {error: cocktail.errors.full_messages}
         end
@@ -29,13 +29,13 @@ class CocktailsController < ApplicationController
 
     def destroy
         Cocktail.delete(@cocktail)
-        render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :accepted
+        render json: CocktailSerializer.new(@cocktail)
     end
 
     private
 
     def find_cocktail
-        @cocktail = Cocktail.find(params[:id])
+        @cocktail = Cocktail.find_by_id(params[:id])
     end
 
     def cocktail_params
@@ -44,13 +44,15 @@ class CocktailsController < ApplicationController
             :description,
             :img_url,
             :instructions,
-            :cocktail_ingredients_attributes => [
-                :id,
-                :quantity,
-                :ingredient_attributes => [
-                    :name
-                ]
-            ]
+            cocktail_ingredients: []
+            # :cocktail_ingredients_attributes => [
+            #     :id,
+            #     :quantity,
+            #     :ingredients_attributes => [
+            #         :name
+            #     ]
+            # ]
         )
+    end
 
 end
