@@ -1,41 +1,40 @@
 class CocktailsController < ApplicationController
-    before_action :find_cocktail, only: [:show, :update, :destroy]
+    before_action :set_cocktail, only: [:show, :update, :destroy]
 
     def index
-        cocktails = Cocktail.all
-        render json: CocktailSerializer.new(cocktails)
+        @cocktails = Cocktail.all
+        render json: CocktailSerializer.new(@cocktails).to_serialized_json
     end
 
     def create
-        cocktail = Cocktail.new(cocktail_params)
+        @cocktail = Cocktail.build(cocktail_params)
         if cocktail.save
-            render json: CocktailSerializer.new(cocktail), status: :created, location: cocktail
+            render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :created, location: cocktail
         else
-            render json: {error: cocktail.errors.full_messages}
+            render json: @cocktail.errors, status: :unprocessable_entity
         end
     end
 
     def show
-        render json: CocktailSerializer.new(@cocktail)
+        render json: CocktailSerializer.new(@cocktail).to_serialized_json
     end
 
     def update
         if @cocktail.update(cocktail_params)
-            render json: CocktailSerializer.new(@cocktail)
+            render json: CocktailSerializer.new(@cocktail).to_serialized_json
         else
-            render json: {error: cocktail.errors.full_messages}
+            render json: @cocktail.errors, status: :unprocessable_entity
         end
     end
 
     def destroy
-        Cocktail.delete(@cocktail)
-        render json: CocktailSerializer.new(@cocktail)
+        @cocktail.destroy
     end
 
     private
 
-    def find_cocktail
-        @cocktail = Cocktail.find_by_id(params[:id])
+    def set_cocktail
+        @cocktail = Cocktail.find(params[:id])
     end
 
     def cocktail_params
@@ -44,14 +43,11 @@ class CocktailsController < ApplicationController
             :description,
             :img_url,
             :instructions,
-            cocktail_ingredients: []
-            # :cocktail_ingredients_attributes => [
-            #     :id,
-            #     :quantity,
-            #     :ingredients_attributes => [
-            #         :name
-            #     ]
-            # ]
+            cocktail_ingredients: [
+                :cocktail_id,
+                :quantity,
+                ingredient: [:id, :name]
+            ]
         )
     end
 
