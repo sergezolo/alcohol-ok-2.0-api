@@ -7,24 +7,21 @@ class CocktailsController < ApplicationController
     end
 
     def create
-          binding.pry
         @cocktail = Cocktail.new(cocktail_params)
-        @cocktail.img_url = params[:imgUrl]
-        ingredients = params[:ingredients]
+        prepare_cocktail
+        # @cocktail.img_url = params[:imgUrl]
+        # ingredients = params[:ingredients]
       
-        ingredients.each do |ingredient|
-            ingredient = Ingredient.find_or_create_by(name: ingredient[:name])
-            cocktail_ingredient = @cocktail.cocktail_ingredients.new
-            cocktail_ingredient.ingredient_id = ingredient.id
-            cocktail_ingredient.quantity = ingredient[:quantity]
-        end
+        # ingredients.each_with_index do |ingredient, index|
+        #     ingredient = Ingredient.find_or_create_by(name: ingredient[:name])
+        #     cocktail_ingredient = @cocktail.cocktail_ingredients.new
+        #     cocktail_ingredient.ingredient_id = ingredient.id
+        #     quantity = ingredient[:quantity]
+        #     cocktail_ingredient.quantity = params[:ingredients][index][:quantity]
+        # end
         #binding.pry
-        @cocktail = Cocktail.new(cocktail_params)
-        @cocktail.ingredients = Ingredient.find_or_create()
-        @cocktail.cocktail_ingredients = CocktailIngredient.new()
- 
-        if cocktail.save
-            render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :created, location: cocktail
+        if @cocktail.save
+            render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :created, location: @cocktail
         else
             render json: @cocktail.errors, status: :unprocessable_entity
         end
@@ -52,16 +49,28 @@ class CocktailsController < ApplicationController
         @cocktail = Cocktail.find(params[:id])
     end
 
+    def prepare_cocktail
+        @cocktail.img_url = params[:imgUrl]
+        ingredients = params[:ingredients]
+        ingredients.each_with_index do |ingredient, index|
+            ingredient = Ingredient.find_or_create_by(name: ingredient[:name])
+            cocktail_ingredient = @cocktail.cocktail_ingredients.new
+            cocktail_ingredient.ingredient_id = ingredient.id
+            cocktail_ingredient.quantity = params[:ingredients][index][:quantity]
+        end
+    end
+
     def cocktail_params
         params.require(:cocktail).permit(
             :name, 
+            :imgUrl,
             :description,
-            :img_url,
             instructions: [],
-            ingredients: [:name, :quantity],
-        ).tap do |whitelisted|
-            whitelisted[:ingredients] = params[:cocktail][:ingredients]
-        end
+            ingredients: [
+                :name, 
+                :quantity
+            ],
+        )
     end
 
 end
