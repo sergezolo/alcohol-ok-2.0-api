@@ -7,7 +7,22 @@ class CocktailsController < ApplicationController
     end
 
     def create
-        @cocktail = Cocktail.build(cocktail_params)
+          binding.pry
+        @cocktail = Cocktail.new(cocktail_params)
+        @cocktail.img_url = params[:imgUrl]
+        ingredients = params[:ingredients]
+      
+        ingredients.each do |ingredient|
+            ingredient = Ingredient.find_or_create_by(name: ingredient[:name])
+            cocktail_ingredient = @cocktail.cocktail_ingredients.new
+            cocktail_ingredient.ingredient_id = ingredient.id
+            cocktail_ingredient.quantity = ingredient[:quantity]
+        end
+        #binding.pry
+        @cocktail = Cocktail.new(cocktail_params)
+        @cocktail.ingredients = Ingredient.find_or_create()
+        @cocktail.cocktail_ingredients = CocktailIngredient.new()
+ 
         if cocktail.save
             render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :created, location: cocktail
         else
@@ -42,13 +57,11 @@ class CocktailsController < ApplicationController
             :name, 
             :description,
             :img_url,
-            :instructions,
-            cocktail_ingredients: [
-                :cocktail_id,
-                :quantity,
-                ingredient: [:id, :name]
-            ]
-        )
+            instructions: [],
+            ingredients: [:name, :quantity],
+        ).tap do |whitelisted|
+            whitelisted[:ingredients] = params[:cocktail][:ingredients]
+        end
     end
 
 end

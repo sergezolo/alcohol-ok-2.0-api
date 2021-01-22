@@ -6,15 +6,15 @@ class CocktailIngredientsController < ApplicationController
         render json: CocktailIngredientsSerializer.new(cocktail_ingredients)
     end
 
-    def create 
-        ingredient = Ingredient.find_or_create(name: params[:name])
-        cocktail_ingredient = @cocktail.cocktail_ingredients.new(ingredient_id: ingredient.id)
-        if cocktail_ingredient.save
-            render json: CocktailIngredientsSerializer.new(cocktail_ingredients), status: :created, location: cocktail_ingredients
-        else
-            render json: cocktail_ingredients.errors, status: :unprocessable_entity
-        end
-    end
+    # def create 
+    #     ingredient = Ingredient.find_or_create(name: params[:name])
+    #     cocktail_ingredient = @cocktail.cocktail_ingredients.new(ingredient_id: ingredient.id)
+    #     if cocktail_ingredient.save
+    #         render json: CocktailIngredientsSerializer.new(cocktail_ingredients), status: :created, location: cocktail_ingredients
+    #     else
+    #         render json: cocktail_ingredients.errors, status: :unprocessable_entity
+    #     end
+    # end
 
     def destroy
         ingredient = Ingredient.find_by_id(params[:ingredient_id])
