@@ -20,13 +20,13 @@ class CocktailsController < ApplicationController
         render json: CocktailSerializer.new(@cocktail).to_serialized_json
     end
 
-    def update
-        if @cocktail.update(cocktail_params)
-            render json: CocktailSerializer.new(@cocktail).to_serialized_json
-        else
-            render json: @cocktail.errors, status: :unprocessable_entity
-        end
-    end
+    # def update
+    #     if @cocktail.update(cocktail_params)
+    #         render json: CocktailSerializer.new(@cocktail).to_serialized_json
+    #     else
+    #         render json: @cocktail.errors, status: :unprocessable_entity
+    #     end
+    # end
 
     def destroy
         @cocktail.destroy
