@@ -29,8 +29,6 @@ class CocktailsController < ApplicationController
     end
 
     def destroy
-        @cocktail
-        binding.pry
         @cocktail.destroy
         render json: CocktailSerializer.new(@cocktails).to_serialized_json
     end
