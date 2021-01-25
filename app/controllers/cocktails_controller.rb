@@ -9,17 +9,6 @@ class CocktailsController < ApplicationController
     def create
         @cocktail = Cocktail.new(cocktail_params)
         prepare_cocktail
-        # @cocktail.img_url = params[:imgUrl]
-        # ingredients = params[:ingredients]
-      
-        # ingredients.each_with_index do |ingredient, index|
-        #     ingredient = Ingredient.find_or_create_by(name: ingredient[:name])
-        #     cocktail_ingredient = @cocktail.cocktail_ingredients.new
-        #     cocktail_ingredient.ingredient_id = ingredient.id
-        #     quantity = ingredient[:quantity]
-        #     cocktail_ingredient.quantity = params[:ingredients][index][:quantity]
-        # end
-        #binding.pry
         if @cocktail.save
             render json: CocktailSerializer.new(@cocktail).to_serialized_json, status: :created, location: @cocktail
         else
@@ -40,7 +29,10 @@ class CocktailsController < ApplicationController
     end
 
     def destroy
+        @cocktail
+        binding.pry
         @cocktail.destroy
+        render json: CocktailSerializer.new(@cocktails).to_serialized_json
     end
 
     private
