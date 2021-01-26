@@ -1,33 +1,3 @@
-# README
-
-# alcoholOK (v2.0)
-
-## Overview
-
-alcoholOK is a web-collection of cocktail recipes for Bartenders and Alcohol Enthusiasts!
-Build with Ruby on Rails API and React-Redux front-end.
-
-## Install
-
--Back-end (https://github.com/sergezolo/alcohol-ok-2.0-api.git):
-
-- fork & clone
-- `bundle install`
-- `rake db:migrate`
-- `rake db:seed`
-- `rails s`
-- app should run at http://localhost:3001 by default.
-
--Front-end (https://github.com/sergezolo/alcohol-ok-2.0.git):
-
-- fork & clone
-- `npm install`
-- `npm start`
-- go to http://localhost:3000, if app doesn't open automatically.
-
-## Any contributions you make will be under the MIT Software License
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
-
 MIT License
 
 Copyright (c) 2021 Sergey Zolotukhin
