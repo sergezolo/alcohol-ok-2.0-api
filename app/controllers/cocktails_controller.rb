@@ -2,7 +2,7 @@ class CocktailsController < ApplicationController
     before_action :set_cocktail, only: [:show, :update, :destroy]
 
     def index
-        @cocktails = Cocktail.all
+        @cocktails = Cocktail.all.order(:name)
         render json: CocktailSerializer.new(@cocktails).to_serialized_json
     end
 
